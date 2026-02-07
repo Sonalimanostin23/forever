@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Only Sindhujah 💖</title>
+
+<style>
+body{
+    margin:0;
+    font-family:'Segoe UI',sans-serif;
+    background:linear-gradient(180deg,#ffd1dc,#fff);
+    overflow-x:hidden;
+    transition:background 1s ease;
+}
+
+/* 🔐 LOCK SCREEN */
+#lock{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+.lock-box{
+    background:white;
+    padding:45px;
+    border-radius:30px;
+    text-align:center;
+    width:95%;
+    max-width:420px;
+    box-shadow:0 20px 40px rgba(0,0,0,.25);
+}
+input{
+    width:85%;
+    padding:14px;
+    border-radius:25px;
+    border:1px solid #ccc;
+    text-align:center;
+}
+button{
+    background:#ff4d6d;
+    color:white;
+    border:none;
+    padding:14px 30px;
+    border-radius:30px;
+    margin-top:15px;
+    font-size:16px;
+    cursor:pointer;
+}
+button:hover{transform:scale(1.05);}
+
+/* 📖 BOOK */
+#book{
+    display:none;
+    max-width:900px;
+    margin:auto;
+    perspective:1500px;
+}
+.page{
+    display:none;
+    min-height:100vh;
+    padding:50px 35px;
+}
+.page.active{
+    display:block;
+    animation:flip 0.8s ease;
+}
+@keyframes flip{
+    from{transform:rotateY(90deg);opacity:0;}
+    to{transform:rotateY(0);opacity:1;}
+}
+
+.card{
+    background:rgba(255,255,255,0.92);
+    border-radius:35px;
+    padding:60px;
+    box-shadow:0 20px 40px rgba(0,0,0,.25);
+}
+h1,h2,h3{
+    color:#ff4d6d;
+    text-align:center;
+}
+p{
+    font-size:19px;
+    line-height:1.9;
+    text-align:center;
+}
+
+.nav{
+    display:flex;
+    justify-content:space-between;
+    margin-top:35px;
+}
+/* 💿 Glow effect when playing */
+.playing{
+    animation-play-state: running;
+    box-shadow:
+        0 0 20px #1db954,
+        0 0 40px #1db954,
+        0 0 70px #1db954;
+}
+/* 🌙 Spotify Dark Theme (Music Page Only) */
+.music-dark{
+    background:#121212 !important;
+    color:white;
+}
+
+.music-dark h2,
+.music-dark p{
+    color:white;
+}
+
+.music-dark .player-quote{
+    color:#ccc;
+}
+
+/* 🎶 Progress Bar */
+.progress-container{
+    width:100%;
+    max-width:320px;
+    margin-top:10px;
+}
+.time{
+    display:flex;
+    justify-content:space-between;
+    font-size:13px;
+    color:#aaa;
+}
+.progress-bar{
+    width:100%;
+    height:6px;
+    background:#333;
+    border-radius:5px;
+    cursor:pointer;
+}
+.progress{
+    height:100%;
+    width:0%;
+    background:#1db954;
+}
+
+/* ✨ TYPING */
+#typing{
+    min-height:180px;
+    font-style:italic;
+    font-size:19px;
+}
+
+/* 🌹 ROSE PETALS */
+.petal{
+    position:fixed;
+    top:-10px;
+    font-size:22px;
+    animation:fall 6s linear infinite;
+}
+@keyframes fall{
+    to{
+        transform:translateY(110vh) rotate(360deg);
+        opacity:0;
+    }
+}
+
+/* 📸 GALLERY */
+.gallery{
+    display:flex;
+    justify-content:center;
+    gap:20px;
+    flex-wrap:wrap;
+}
+.gallery img{
+    width:28%;
+    border-radius:20px;
+    box-shadow:0 10px 25px rgba(0,0,0,.3);
+}
+
+/* 🎵 MUSIC PLAYER */
+.player{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:20px;
+}
+.player-img{
+    width:200px;
+    height:200px;
+    border-radius:50%;
+    background:url('bg.jpg') center/cover no-repeat;
+    box-shadow:0 15px 30px rgba(0,0,0,0.4);
+    animation:spin 12s linear infinite;
+    animation-play-state:paused;
+}
+.playing{
+    animation-play-state:running;
+}
+@keyframes spin{
+    from{transform:rotate(0);}
+    to{transform:rotate(360deg);}
+}
+.player-controls{
+    display:flex;
+    gap:20px;
+}
+.player-controls button{
+    font-size:18px;
+    border-radius:50%;
+    padding:12px 18px;
+}
+.player-quote{
+    font-style:italic;
+    font-size:18px;
+    color:#555;
+    text-align:center;
+}
+/* 📸 IMAGE LIGHTBOX */
+#lightbox{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.85);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:999;
+}
+#lightbox img{
+    max-width:90%;
+    max-height:90%;
+    border-radius:20px;
+    box-shadow:0 0 40px rgba(255,255,255,0.3);
+}
+#lightbox span{
+    position:absolute;
+    top:20px;
+    right:30px;
+    font-size:30px;
+    color:white;
+    cursor:pointer;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- 🔐 PASSWORD -->
+<div id="lock">
+<div class="lock-box">
+<h2>🔐 Only for Sindhujah</h2>
+<p>Enter the secret word 💖</p>
+<input type="password" id="pass" placeholder="Hint: your name 😉">
+<br>
+<button onclick="unlock()">Unlock 💌</button>
+<p id="error" style="color:red;"></p>
+</div>
+</div>
+
+<!-- 📖 BOOK -->
+<div id="book">
+
+<div class="page active"><div class="card">
+<h1>💖 Sindhujah 💖</h1>
+<p>My best friend. My comfort. My forever.</p>
+<div class="nav"><button onclick="next()">Next ➡️</button></div>
+</div></div>
+
+<div class="page"><div class="card">
+<h2>📏 Height Difference Reality</h2>
+
+<p>
+One of us reaches the top shelf…  
+the other reaches straight into my heart 😌
+</p>
+
+<img src="height-joke.jpg"
+     style="width:70%; max-width:300px; border-radius:20px; margin:25px auto; display:block;
+     box-shadow:0 15px 30px rgba(0,0,0,0.3);">
+
+<p>
+You may be short and unbelievably cute,  
+and I may be taller —  
+but somehow, you still look down on me 😄
+</p>
+
+<p>
+Height difference doesn’t matter when  
+your presence already stands above everything.
+</p>
+
+<div class="nav">
+<button onclick="prev()">⬅️</button>
+<button onclick="next()">➡️</button>
+</div>
+</div></div>
+
+<div class="page"><div class="card">
+<h2>🎓 College Memories</h2>
+<p>Those classes, laughs, bunked hours and chaos — college was special because of you.</p>
+<div class="nav"><button onclick="prev()">⬅️</button><button onclick="next()">➡️</button></div>
+</div></div>
+
+<div class="page"><div class="card">
+<h2>Our Malaysia Memories</h2>
+<p>Different country, same madness. Same jokes, same smiles, unforgettable days.</p>
+<div class="nav"><button onclick="prev()">⬅️</button><button onclick="next()">➡️</button></div>
+</div></div>
+
+<div class="page"><div class="card">
+<h2>☂️ The Big Umbrella</h2>
+<p>Do you remember this?</p>
+<h3>If yes — smile big 😊</h3>
+<div class="nav"><button onclick="prev()">⬅️</button><button onclick="next()">➡️</button></div>
+</div></div>
+
+<div class="page"><div class="card">
+<h2>📄 The Xerox Machine</h2>
+<p>If this made sense instantly…</p>
+<h3>Smile harder 😄</h3>
+<div class="nav"><button onclick="prev()">⬅️</button><button onclick="next()">➡️</button></div>
+</div></div>
+
+<div class="page"><div class="card music-dark">
+<h2>🎵 A Song for You</h2>
+<p><strong>This song is dedicated to you.</strong></p>
+<div class="player">
+    <div class="progress-container">
+    <div class="time">
+        <span id="currentTime">0:00</span>
+        <span id="duration">0:00</span>
+    </div>
+
+    <div class="progress-bar" onclick="setProgress(event)">
+        <div id="progress" class="progress"></div>
+    </div>
+</div>
+
+<div id="disc" class="player-img"></div>
+<div class="player-controls">
+<button onclick="playSong()">▶</button>
+<button onclick="pauseSong()">⏸</button>
+<button onclick="stopSong()">⏹</button>
+</div>
+<div class="player-quote">“Some songs don’t just play… they stay.”</div>
+<div class="player-quote">“Whenever you miss me, play this.”</div>
+</div>
+<div class="nav"><button onclick="prev()">⬅️</button><button onclick="next()">➡️</button></div>
+</div></div>
+
+<div class="page"><div class="card">
+<h2>🎉 Our Fun Zone</h2>
+
+<p><strong>😂 Funny Us</strong></p>
+<p>
+• Laughing at our own jokes 🤦‍♀️<br>
+• Saying “last time” and doing it again 😄<br>
+• Serious talks turning into nonsense
+</p>
+
+<p><strong>📝 Our Bucket List</strong></p>
+<p>
+✔ One more crazy trip together ✈️<br>
+✔ Late-night talks without time ⏰<br>
+✔ Meet again and laugh like nothing changed 💖
+</p>
+
+<div class="nav">
+<button onclick="prev()">⬅️</button>
+<button onclick="next()">➡️</button>
+</div>
+</div></div>
+
+<div class="page"><div class="card">
+<h2>🌸 Who You Are — For Me</h2>
+
+<p>
+You are one of the most amazing women I have ever known.  
+Perfect — not because you never fall,  
+but because of how beautifully you rise.
+</p>
+
+<p>
+You are kind.  
+You are strong.  
+You are a pure soul with the softest heart.
+you are small in height, but your heart is endlessly big
+</p>
+
+<p>
+The way you handle situations with courage,  
+the way you show your emotions without fear,  
+the way you cry like a child when you’re overwhelmed,
+“the way you pee your bed like a baby,  
+the way you try — always — to be there for people,  
+the way you say <em>“I love you”</em> to your mom,  
+the way you care, the way you love —  
+especially the way you love me.
+</p>
+
+<p>
+In the beginning, I saw someone who wanted to mingle,  
+someone who depended deeply on people,  
+someone whose heart felt heavy when absence hurt too much.
+</p>
+
+<p>
+But now — you have me.
+</p>
+
+<p>
+You don’t have to worry about depending on anyone anymore.  
+I’m here.  
+I’ll hold you.  
+I’ll protect you.  
+I’ll spoil you with endless love and care.
+</p>
+
+<p>
+You are stronger than you think.  
+You are braver than you believe.  
+You are enough — more than enough.
+</p>
+
+<p>
+I’ll be your constant.  
+Your safe place.  
+Your always.
+</p>
+
+<p>
+In this life,  
+in the next universe,  
+in every lifetime that follows —  
+I’ll still choose you.
+</p>
+
+<p><strong>
+Always and forever,  
+my dear Ajju 🤍
+</strong></p>
+
+<div class="nav">
+<button onclick="prev()">⬅️</button>
+<button onclick="next()">➡️</button>
+</div>
+</div></div>
+
+
+<div class="page"><div class="card">
+<h2>💌 A Letter For You</h2>
+<p id="typing"></p>
+<div class="nav"><button onclick="prev()">⬅️</button><button onclick="next()">➡️</button></div>
+</div></div>
+
+<div class="page"><div class="card">
+<h2>📸 Our Memories</h2>
+<div class="gallery">
+<img src="photo1.jpg" onclick="openImg(this.src)">
+<img src="photo2.jpg" onclick="openImg(this.src)">
+<img src="photo3.jpg" onclick="openImg(this.src)">
+
+</div>
+<div class="nav"><button onclick="prev()">⬅️</button><button onclick="next()">➡️</button></div>
+</div></div>
+
+<div class="page"><div class="card">
+<h2>🌍 Open When You Miss Me</h2>
+<p>No matter where you are — you’re never alone. I’m always with you.</p>
+<div class="nav"><button onclick="prev()">⬅️</button></div>
+</div></div>
+
+
+
+</div>
+
+<audio id="bgm" loop>
+<source src="music.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+function unlock(){
+    if(pass.value.toLowerCase()=="ajju"){
+        lock.style.display="none";
+        book.style.display="block";
+        document.body.style.background="url('bg.jpg') center/cover fixed";
+        //bgm.play();
+        petals();
+        typeText();
+    }else{
+        error.innerText="Wrong 💔 Try again";
+    }
+}
+
+let current=0;
+const pages=document.querySelectorAll(".page");
+function show(i){pages.forEach(p=>p.classList.remove("active"));pages[i].classList.add("active");}
+function next(){if(current<pages.length-1){current++;show(current);}}
+function prev(){if(current>0){current--;show(current);}}
+
+const text="Sindhujah… you are my laughter, my memories, my constant. Distance may change places, but never hearts. I’ll miss you every single day.";
+let idx=0;
+function typeText(){if(idx<text.length){typing.innerHTML+=text.charAt(idx++);setTimeout(typeText,50);}}
+
+function petals(){
+    setInterval(()=>{
+        const p=document.createElement("div");
+        p.className="petal";
+        p.innerText="🌹";
+        p.style.left=Math.random()*100+"vw";
+        document.body.appendChild(p);
+        setTimeout(()=>p.remove(),6000);
+    },300);
+}
+
+const disc=document.getElementById("disc");
+function playSong(){bgm.play();disc.classList.add("playing");}
+function pauseSong(){bgm.pause();disc.classList.remove("playing");}
+function stopSong(){bgm.pause();bgm.currentTime=0;disc.classList.remove("playing");}
+
+
+const progress = document.getElementById("progress");
+const currentTimeEl = document.getElementById("currentTime");
+const durationEl = document.getElementById("duration");
+
+/* Update progress */
+bgm.addEventListener("timeupdate",()=>{
+    if(bgm.duration){
+        progress.style.width = (bgm.currentTime / bgm.duration) * 100 + "%";
+        currentTimeEl.textContent = formatTime(bgm.currentTime);
+        durationEl.textContent = formatTime(bgm.duration);
+    }
+});
+
+/* Click to seek */
+function setProgress(e){
+    const width = e.currentTarget.clientWidth;
+    const clickX = e.offsetX;
+    bgm.currentTime = (clickX / width) * bgm.duration;
+}
+
+function formatTime(t){
+    const m = Math.floor(t / 60);
+    const s = Math.floor(t % 60);
+    return m + ":" + (s < 10 ? "0" + s : s);
+}
+
+function openImg(src){
+    document.getElementById("lightbox").style.display="flex";
+    document.getElementById("lightbox-img").src=src;
+}
+function closeImg(){
+    document.getElementById("lightbox").style.display="none";
+}
+
+</script>
+
+<div id="lightbox" onclick="closeImg()">
+    <span>✖</span>
+    <img id="lightbox-img">
+</div>
+
+</body>
+</html>
